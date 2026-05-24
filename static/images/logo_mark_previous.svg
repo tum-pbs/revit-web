@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 512 512"
+   role="img"
+   aria-labelledby="title desc"
+   version="1.1"
+   id="svg17"
+   sodipodi:docname="logo_mark_previous.svg"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs17">
+    <linearGradient
+       id="swatch27"
+       inkscape:swatch="solid">
+      <stop
+         style="stop-color:#f93e5e;stop-opacity:1;"
+         offset="0"
+         id="stop28" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#swatch27"
+       id="linearGradient28"
+       x1="213.00524"
+       y1="255.99974"
+       x2="299"
+       y2="255.99974"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <sodipodi:namedview
+     id="namedview17"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="21.596972"
+     inkscape:cx="-65.148023"
+     inkscape:cy="181.15966"
+     inkscape:window-width="2560"
+     inkscape:window-height="1382"
+     inkscape:window-x="107"
+     inkscape:window-y="81"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg17"
+     showguides="true" />
+  <title
+     id="title">ReViT minimalist logo mark previous version</title>
+  <desc
+     id="desc">A fourfold rotational frame around grid tokens and a central local canonical basis.</desc>
+  <g
+     fill="none"
+     stroke-linecap="round"
+     stroke-linejoin="round"
+     id="g14">
+    <!-- Discrete rotational-equivariance frame -->
+    <path
+       d="M304 82 A184 184 0 0 1 430 208"
+       stroke="#111827"
+       stroke-width="14"
+       id="path1" />
+    <path
+       d="M430 304 A184 184 0 0 1 304 430"
+       stroke="#111827"
+       stroke-width="14"
+       id="path2" />
+    <path
+       d="M208 430 A184 184 0 0 1 82 304"
+       stroke="#111827"
+       stroke-width="14"
+       id="path3" />
+    <path
+       d="M82 208 A184 184 0 0 1 208 82"
+       stroke="#111827"
+       stroke-width="14"
+       id="path4" />
+    <!-- Grid patches / ViT tokens -->
+    <g
+       stroke="#CBD5E1"
+       stroke-width="8"
+       id="g7">
+      <rect
+         x="156"
+         y="156"
+         width="70"
+         height="70"
+         rx="7"
+         id="rect4" />
+      <rect
+         x="286"
+         y="156"
+         width="70"
+         height="70"
+         rx="7"
+         id="rect5" />
+      <rect
+         x="156"
+         y="286"
+         width="70"
+         height="70"
+         rx="7"
+         id="rect6" />
+      <rect
+         x="286"
+         y="286"
+         width="70"
+         height="70"
+         rx="7"
+         id="rect7" />
+    </g>
+    <!-- Local canonical basis -->
+    <circle
+       stroke="#2563EB"
+       stroke-width="10"
+       id="circle7"
+       cy="256"
+       cx="256"
+       r="38"
+       style="stroke-dasharray:20, 20;stroke-dashoffset:0;stroke:url(#linearGradient28);stroke-opacity:1" />
+    <path
+       d="M256 256 L326 218"
+       stroke="#2563EB"
+       stroke-width="10"
+       id="path7" />
+    <path
+       d="M256 256 L218 186"
+       stroke="#2563EB"
+       stroke-width="10"
+       id="path8" />
+    <path
+       d="M326 218 L309 216 L319 232"
+       stroke="#2563EB"
+       stroke-width="8"
+       id="path9" />
+    <path
+       d="M218 186 L216 203 L232 193"
+       stroke="#2563EB"
+       stroke-width="8"
+       id="path10" />
+    <!-- Invariant attention links -->
+  </g>
+  <g
+     fill="#111827"
+     id="g17">
+    <circle
+       cx="256"
+       cy="66"
+       r="9"
+       id="circle14" />
+    <circle
+       cx="446"
+       cy="256"
+       r="9"
+       id="circle15" />
+    <circle
+       cx="256"
+       cy="446"
+       r="9"
+       id="circle16" />
+    <circle
+       cx="66"
+       cy="256"
+       r="9"
+       id="circle17" />
+  </g>
+  <g
+     stroke="#2563eb"
+     stroke-width="6"
+     id="g14-2"
+     transform="matrix(0.85935921,0,0,0.8400228,36.055295,39.161016)">
+    <path
+       d="m 175,175 23,-16"
+       id="path7-2" />
+    <path
+       d="M 175,175 159,152"
+       id="path8-7" />
+    <path
+       d="m 337,175 24,12"
+       id="path9-3" />
+    <path
+       d="m 337,175 12,-24"
+       id="path10-7" />
+    <path
+       d="M 175,337 151,325"
+       id="path11-9" />
+    <path
+       d="m 175,337 -12,24"
+       id="path12-0" />
+    <path
+       d="m 337,337 -23,16"
+       id="path13-2" />
+    <path
+       d="m 337,337 16,23"
+       id="path14-3" />
+  </g>
+</svg>

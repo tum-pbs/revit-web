@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="ReViT: Rotational-equivariant Vision Transformers for Neural PDE Solvers">
+  <meta name="keywords" content="ReViT, Equivariant, Vision Transformer, PDE, Rotational Equivariance">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ReViT: Rotational-equivariant Vision Transformers for Neural PDE Solvers</title>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/logo_mark_previous.svg">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://ge.in.tum.de/about/m-eng-hao-wei-phd-candidate/">
+        <span class="icon"><i class="fas fa-home"></i></span>
+      </a>
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">More Research</a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://ge.in.tum.de/publications/">Physics-based simulation group</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <div style="display: flex; align-items: center; justify-content: center; gap: 18px;">
+            <img src="./static/images/logo_mark_previous.svg" alt="ReViT Logo" style="height: 130px; width: 130px;">
+            <h1 class="title is-1 publication-title">ReViT: Rotational-equivariant Vision Transformers for Neural PDE Solvers</h1>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://ge.in.tum.de/about/m-eng-hao-wei-phd-candidate/">Hao Wei</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://ge.in.tum.de/about/bjorn-list/">Bjoern List</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://ge.in.tum.de/about/n-thuerey/">Nils Thuerey</a><sup>1</sup></span>
+          </div>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Technical University of Munich</span>
+          </div>
+          <div class="is-size-6 publication-venue" style="margin: 0.5rem auto;">Under review at ICML 2026</div>
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span><span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span><span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEASER: Fig 1 from paper -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <div class="content has-text-justified">
+          <p><strong>ReViT</strong> is the first Vision Transformer framework that enforces strict rotational equivariance on grid-based physical fields. By mapping scalar and vector inputs into locally invariant representations derived from physics-based canonical bases, ReViT enables standard self-attention without symmetry violations&mdash;yielding significant accuracy gains across 2D and 3D PDE benchmarks.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+<!-- ABSTRACT -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>Physics obeys strict symmetries like rotational equivariance. However, the standard Transformer architectures widely used in physics foundation models do not enforce these constraints by construction. We introduce <strong>ReViT</strong>, a rotationally equivariant Vision Transformer framework for neural PDE solvers operating on grid-based physical fields that strictly enforces rotational equivariance.</p>
+          <p>ReViT maps scalar and vector inputs into locally invariant representations derived from physics-based canonical bases, enabling the use of standard self-attention without symmetry violations. Built on a hierarchical Swin-style backbone with a precomputed reference basis pyramid, ReViT preserves equivariance across multi-scale operations.</p>
+          <p>We evaluate ReViT on a wide range of 2D and 3D PDE benchmarks, such as Magnetohydrodynamics and Turbulent Channel Flows, demonstrating significant gains over state-of-the-art baselines. ReViT exhibits strong generalization, and <strong>reduces MSE by up to 65%</strong> compared with the best-performing alternatives.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+<!-- MOTIVATION: CHALLENGES -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Theoretical Analysis: Why ViTs Fail</h2>
+        <div class="content has-text-justified">
+          <p>We consider a physical field \(\mathbf{f}: \Omega \rightarrow \mathcal{V}\) on a spatial domain \(\Omega \subset \mathbb{R}^d\). For a <em>vector field</em> \(\mathbf{u}\), the rotation group acts on both the domain and the value: \([L_g \mathbf{u}](x) = \mathbf{R}(g)\mathbf{u}(\mathbf{R}(g)^{-1}x)\). A neural network \(\Phi\) is <em>equivariant</em> if \(\Phi(L_g \mathbf{u}) = L_g \Phi(\mathbf{u})\). We identify <strong>three distinct mechanisms</strong> by which standard ViTs violate rotational equivariance:</p>
+        </div>
+
+        <div class="challenge-item">
+          <strong>C1. The Tokenization Barrier.</strong>
+          Standard patch embeddings flatten the vector field within \(P_i\) into \(\mathbf{v} \in \mathbb{R}^{K^d \cdot d}\) and apply a learnable linear map \(\mathbf{E}\). Under rotation \(g\), pixels permute to \(\pi_g \mathbf{v}\), but \(\mathbf{E}(\pi_g \mathbf{v}) \neq \mathbf{E}(\mathbf{v})\)&mdash;projecting rotated patterns into disjoint latent regions.
+        </div>
+        <div class="challenge-item">
+          <strong>C2. Loss of Spatial Equivariance.</strong>
+          Absolute PEs break equivariance since \(\mathbf{P}(\mathbf{R}(g)x) \neq \boldsymbol{\pi}_g \mathbf{P}(x)\). Relative PEs depend on \(\boldsymbol{\delta}_{ij} = x_j - x_i\), restoring translation equivariance, but an <em>isotropic</em> function like \(\|x_i - x_j\|\) discards all directional information.
+        </div>
+        <div class="challenge-item">
+          <strong>C3. The Representational Mismatch.</strong>
+          For vector fields, rotations act on both coordinates and values. By Schur's Lemma, any linear map commuting with rotations must be \(\mathbf{W} = \lambda \mathbf{I}\). Standard ViT projections are unconstrained and dense, violating \(\mathbf{W}(\mathbf{R}(g)\mathbf{u}) = \mathbf{R}(g)(\mathbf{W}\mathbf{u})\) and breaking equivariance.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+<!-- METHOD -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Methodology of ReViT</h2>
+        <div class="content has-text-justified">
+          <p>By adapting local canonicalization to ViTs, we decouple basis transformations from feature learning, solving challenges C1&ndash;C3. The model alternates between <strong>invariant processing</strong> (features in local canonical frames) and <strong>global transitions</strong> (physical basis transformations). The architecture consists of three stages: (1) Local Canonicalization, (2) Invariant Transformer Processing, and (3) Equivariant Decoding.</p>
+        </div>
+
+        <div class="arch-diagram-container">
+          <img src="./static/images/structure.png" alt="ReViT architecture overview.">
+          <p class="is-size-7 has-text-grey has-text-centered" style="margin-top: 0.75rem;">
+            <strong>Figure 2.</strong> Overview of the ReViT architecture. The hierarchical encoder-decoder alternates between <strong>invariant processing</strong> (blue) and <strong>global transitions</strong> (orange). The <em>Reference Basis Pyramid</em> (purple) supplies local bases \(\mathcal{B}^{(l)}\) to mediate resolution changes (<em>Merge</em>, <em>Expand</em>) and the final <em>Equivariant Rebase</em>.
+          </p>
+        </div>
+
+        <div class="method-box">
+          <h4 class="title is-5" style="margin-bottom: 0.5rem;">1. Local Canonicalization</h4>
+          <p>For each patch \(P_i\), we compute a <em>Local Canonical Basis</em> \(\mathbf{B}_i \in SO(d)\) deterministically from the field values. Vectors are projected into local frames: \(\mathbf{u}^{\text{local}}_{i,k} = \mathbf{B}_i^T \mathbf{u}_k\). This is provably invariant:</p>
+          <div class="equation-highlight">
+            $$(\mathbf{R}(g)\mathbf{B}_i)^{T} (\mathbf{R}(g)\mathbf{u}_i^{\text{global}}) = \mathbf{B}_i^{T} \mathbf{R}(g)^{T} \mathbf{R}(g) \mathbf{u}_i^{\text{global}} = \mathbf{B}_i^{T} \mathbf{u}_i^{\text{global}} = \mathbf{u}^{\text{local}}_{i,k}$$
+          </div>
+          <p>In 3D, the basis is derived from the mean velocity \(\bar{\mathbf{u}}_i\) and mean vorticity \(\bar{\boldsymbol{\omega}}_i\), using stabilized analytical orthogonalization based on sequential cross-products.</p>
+        </div>
+
+        <div class="method-box">
+          <h4 class="title is-5" style="margin-bottom: 0.5rem;">2. Invariant Patch Aggregation</h4>
+          <p>Instead of flattening patches (which breaks under rotation-induced permutations, C1), we treat the projected local vectors as a set of invariant features \(\mathcal{X}_i = \{\mathbf{h}_{i,k} \mid k \in P_i\}\) where \(\mathbf{h}_{i,k} = \text{MLP}(\mathbf{u}^{\text{local}}_{i,k})\). A Set-Transformer with a learnable query token aggregates them: \(\text{Agg}(\pi(\mathcal{X}_i)) = \text{Agg}(\mathcal{X}_i)\), ensuring rotation-invariant tokens.</p>
+        </div>
+
+        <div class="method-box">
+          <h4 class="title is-5" style="margin-bottom: 0.5rem;">3. Rebased Relative Positional Encoding</h4>
+          <p>We project displacement vectors into the query token's local basis: \(\mathbf{p}_{ij \to i} = \mathbf{B}_i^T(x_j - x_i)\). This is invariant to global rotations while preserving local anisotropy. The modified self-attention becomes:</p>
+          <div class="equation-highlight">
+            $$\text{SA}(\mathbf{X}) = \text{softmax}\left(\frac{\mathbf{X}\mathbf{W}_Q (\mathbf{X}\mathbf{W}_K)^T}{\sqrt{d_k}}+\mathbf{P}\right)\mathbf{X}\mathbf{W}_V$$
+          </div>
+        </div>
+
+        <div class="method-box">
+          <h4 class="title is-5" style="margin-bottom: 0.5rem;">4. Equivariant Decoder</h4>
+          <p>Local predictions are lifted back to global coordinates: \(\mathbf{u}'_{i} = \mathbf{B}_i \cdot \mathbf{z}^{\text{local}}_{i}\). Since \(\mathbf{z}^{\text{local}}\) is invariant and \(\mathbf{B}_i\) co-rotates with the input, the output is strictly equivariant.</p>
+        </div>
+
+        <div class="method-box">
+          <h4 class="title is-5" style="margin-bottom: 0.5rem;">5. Reference Basis Pyramid</h4>
+          <p>A pyramid of local canonical bases \(\mathcal{B}^{(l)} = \{\mathbf{B}_k^{(l)}\}\) is pre-computed at each resolution \(l\). Resolution changes use a <strong>&ldquo;globalize&ndash;resample&ndash;localize&rdquo;</strong> procedure, ensuring rotation-invariance across all scales.</p>
+        </div>
+
+        <div class="insight-box">
+          <p class="has-text-weight-semibold">Equivariance Analysis:</p>
+          <p>ReViT achieves <strong>exact chiral octahedral group \(O\) equivariance</strong> and approximate \(SO(3)\) equivariance. The gap stems from grid-based constraints: resampling introduces interpolation bias, and discretization artifacts arise from fixed patch/window boundaries. Unlike \(\frac{\pi}{2}\) rotations, arbitrary rotations break grid symmetry. Data augmentation helps dampen these artifacts.</p>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+<!-- RESULTS -->
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Results</h2>
+
+        <!-- RotMNIST -->
+        <h3 class="title is-4">Classification: RotMNIST</h3>
+        <div class="content has-text-justified">
+          <p>ReViT achieves <strong>SOTA accuracy (98.26%)</strong> while delivering a ~4&times; speedup and a ~53&times; memory reduction (1.81 GB vs. 95.5 GB) compared to lifted baselines. The baselines' inefficiency stems from the lifting operation that expands self-attention complexity to \(\mathcal{O}(N^2 |\mathcal{H}|^2)\).</p>
+        </div>
+        <div class="model-table-wrapper">
+          <table class="table is-fullwidth">
+            <thead><tr><th>Model</th><th>Acc (%)</th><th>Train (ms)</th><th>Infer (ms)</th><th>Mem (GB)</th></tr></thead>
+            <tbody>
+              <tr><td>GSA-Nets(\(R_4\))</td><td>97.46</td><td>298.8&plusmn;0.9</td><td>110.0&plusmn;0.1</td><td>5.27</td></tr>
+              <tr><td>GSA-Nets(\(R_8\))</td><td>97.90</td><td>144.2&plusmn;2.1</td><td>65.2&plusmn;0.2</td><td>29.9</td></tr>
+              <tr><td>GSA-Nets(\(R_{12}\))</td><td>97.97</td><td>272.6&plusmn;0.6</td><td>118.7&plusmn;0.5</td><td>95.5</td></tr>
+              <tr><td>GE-ViT(\(R_{12}\))</td><td>98.01</td><td>281.0&plusmn;0.7</td><td>118.9&plusmn;0.3</td><td>95.5</td></tr>
+              <tr style="font-weight:bold; background:#f0f7ff;"><td>ReViT (Ours)</td><td><strong>98.26</strong></td><td><strong>67.7</strong>&plusmn;0.2</td><td><strong>31.0</strong>&plusmn;0.7</td><td><strong>1.81</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 2D Advection -->
+        <h3 class="title is-4">2D Advection (Adv)</h3>
+        <div class="content has-text-justified">
+          <p>ReViT achieves the lowest MSE (\(\approx 10^{-4}\)) among all compared methods. It consistently outperforms the non-equivariant PDETrans, highlighting the contribution of equivariant mechanisms. The computational overhead of ReViT is comparable to PDETrans with only 11.6% increase, yet delivers <strong>37.2% MSE reduction</strong>.</p>
+        </div>
+
+
+        <!-- KF Robustness -->
+        <h3 class="title is-4">Robustness on Arbitrary Angles (2D Kolmogorov Flow)</h3>
+        <div class="content has-text-justified">
+          <p>We analyze prediction accuracy over 20 rollout steps across angular intervals of \(\frac{\pi}{12}\) within the range \((0, \pi)\), focusing on orthogonal angular pairs (\(\theta\) and \(\theta + \frac{\pi}{2}\)). ReViT demonstrates <strong>perfect equivariance</strong> for all orthogonal pairs with exactly <strong>+0.0% relative error</strong>, regardless of input angle \(\theta\). PDETrans shows high variance (up to <strong>+162.8%</strong>) on unseen angles.</p>
+        </div>
+
+
+        <!-- 3D MHD -->
+        <h3 class="title is-4">3D Magnetohydrodynamics (MHD)</h3>
+        <div class="content has-text-justified">
+          <p>ReViT achieves the <strong>lowest MSE (\(1.26 \times 10^{-2}\))</strong> and <strong>highest \(R^2\) (0.97)</strong>, outperforming the strongest baseline (AViT) by approximately <strong>44% in MSE</strong>. ReViT preserves sharp, high-frequency structures of the magnetic field and velocity eddies, remaining virtually indistinguishable from the reference.</p>
+        </div>
+
+        <!-- 3D TCF -->
+        <h3 class="title is-4">3D Turbulent Channel Flow (TCF)</h3>
+        <div class="content has-text-justified">
+          <p>TCF represents a symmetry-starved regime with severe spatial anisotropy. ReViT performs the best with MSE of \(0.21 \times 10^{-2}\) and \(R^2\) of 0.96, representing a <strong>65% error reduction</strong> compared to the next best models.</p>
+        </div>
+
+
+        <!-- Combined Results Table -->
+        <h3 class="title is-4">3D Quantitative Results</h3>
+        <div class="content has-text-justified">
+          <p>Metrics computed over the full chiral octahedral group \(O\) with three different seeds, reported as mean &plusmn; std:</p>
+        </div>
+        <div class="model-table-wrapper">
+          <table class="table is-fullwidth">
+            <thead>
+              <tr>
+                <th rowspan="2">Model</th>
+                <th colspan="2" style="text-align:center;">MHD</th>
+                <th colspan="2" style="text-align:center;">TCF</th>
+              </tr>
+              <tr>
+                <th>MSE (\(\times 10^{-2}\)) &darr;</th><th>\(R^2\) &uarr;</th>
+                <th>MSE (\(\times 10^{-2}\)) &darr;</th><th>\(R^2\) &uarr;</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>AFNO</td><td>16.40 &plusmn; 42.30</td><td>0.60 &plusmn; 1.00</td><td>28.40 &plusmn; 56.40</td><td>-3.79 &plusmn; 9.49</td></tr>
+              <tr><td>P3D</td><td>10.20 &plusmn; 6.24</td><td>0.73 &plusmn; 0.15</td><td>5.72 &plusmn; 2.94</td><td>0.04 &plusmn; 0.05</td></tr>
+              <tr><td>UNet3D</td><td>3.64 &plusmn; 0.93</td><td>0.90 &plusmn; 0.03</td><td>7.12 &plusmn; 3.67</td><td>-0.20 &plusmn; 0.62</td></tr>
+              <tr><td>Swin3D</td><td>3.58 &plusmn; 1.19</td><td>0.90 &plusmn; 0.03</td><td>0.60 &plusmn; 0.22</td><td>0.90 &plusmn; 0.04</td></tr>
+              <tr><td>AViT</td><td>2.20 &plusmn; 0.36</td><td>0.94 &plusmn; 0.01</td><td>0.60 &plusmn; 0.23</td><td>0.90 &plusmn; 0.04</td></tr>
+              <tr style="font-weight:bold; background:#f0f7ff;"><td>ReViT-3D (Ours)</td><td><strong>1.26 &plusmn; 0.14</strong></td><td><strong>0.97 &plusmn; 0.01</strong></td><td><strong>0.21 &plusmn; 0.00</strong></td><td><strong>0.96 &plusmn; 0.00</strong></td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Ablation -->
+        <h3 class="title is-4">Ablation Study</h3>
+        <div class="content has-text-justified">
+          <p>A systematic ablation study identifies the necessity of each ReViT component. Removing any single component leads to measurable degradation in both accuracy and equivariance.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+<hr class="section-divider">
+
+<!-- BIBTEX -->
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@inproceedings{ReViT2026,
+  title     = {{ReViT}: Rotational-equivariant Vision Transformers
+               for Neural {PDE} Solvers},
+  author    = {Hao Wei and Bjoern List and Nils Thuerey},
+  booktitle = {International Conference on Machine Learning (ICML)},
+  year      = {2026},
+}</code></pre>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="content has-text-centered">
+      <p>Page template borrowed from <a href="https://nerfies.github.io/">Nerfies</a>.</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
