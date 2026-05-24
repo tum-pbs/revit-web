@@ -79,7 +79,7 @@
                 </a>
               </span>
               <span class="link-block">
-                <a href="#" class="external-link button is-normal is-rounded is-dark">
+                <a href="https://github.com/tum-pbs/revit" class="external-link button is-normal is-rounded is-dark">
                   <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
                 </a>
               </span>
@@ -166,6 +166,74 @@
           <p class="is-size-7 has-text-grey has-text-centered" style="margin-top: 0.75rem;">
             <strong>Figure 2.</strong> Overview of the ReViT architecture. The hierarchical encoder-decoder alternates between <strong>invariant processing</strong> (blue) and <strong>global transitions</strong> (orange). The <em>Reference Basis Pyramid</em> (purple) supplies local bases \(\mathcal{B}^{(l)}\) to mediate resolution changes (<em>Merge</em>, <em>Expand</em>) and the final <em>Equivariant Rebase</em>.
           </p>
+        </div>
+
+        <div class="rebase-interactive" id="aov-rebasing">
+          <div class="rebase-header">
+            <p class="rebase-kicker">Interactive Local Rebasing</p>
+            <h3 class="title is-4">Rotate Globally, Learn Locally</h3>
+            <p>The local basis is built from a patch-aggregated vector and used to rebase global vectors into local coordinates. When the field rotates, the basis co-rotates, so projecting vectors with \(\mathbf{B}_i^{\mathsf T}\) keeps the local representation stable.</p>
+          </div>
+
+          <div class="rebase-control-bar" role="group" aria-label="Local-basis global rotation">
+            <div class="rebase-angle-buttons" aria-label="Preset rotations">
+              <button class="rebase-angle is-active" type="button" data-angle="0">0&deg;</button>
+              <button class="rebase-angle" type="button" data-angle="90">90&deg;</button>
+              <button class="rebase-angle" type="button" data-angle="180">180&deg;</button>
+              <button class="rebase-angle" type="button" data-angle="270">270&deg;</button>
+            </div>
+            <label class="rebase-slider-label" for="aov-angle">Input rotation</label>
+            <input id="aov-angle" class="rebase-slider" type="range" min="0" max="270" step="1" value="0">
+            <output id="aov-angle-output" for="aov-angle">0&deg;</output>
+          </div>
+
+          <div class="rebase-figure-guide">
+            <span><strong>Orange box:</strong> selected patch used to show the patch-level basis.</span>
+            <span><strong>Global vector</strong> \(\mathbf{u}\): drawn in the fixed \(X\)-\(Y\) basis.</span>
+            <span><strong>Rebased vector</strong> \(\mathbf{u}^{\text{local}}=\mathbf{B}_i^{\mathsf T}\mathbf{u}\): drawn in the co-rotating local basis.</span>
+          </div>
+
+          <div class="rebase-panels">
+            <figure class="rebase-panel">
+              <figcaption class="rebase-panel-title">
+                <span>Global field</span>
+                <span>fixed \(X\)-\(Y\) basis</span>
+              </figcaption>
+              <canvas id="aov-global-canvas" class="rebase-canvas" aria-label="Global vector field under rotation"></canvas>
+            </figure>
+            <figure class="rebase-panel">
+              <figcaption class="rebase-panel-title">
+                <span>Rebased field</span>
+                <span id="aov-local-basis-label">local basis</span>
+              </figcaption>
+              <canvas id="aov-local-canvas" class="rebase-canvas" aria-label="Rebased field under the same rotation"></canvas>
+            </figure>
+          </div>
+
+          <div class="rebase-token-flow" aria-label="Local rebasing sequence">
+            <figure class="rebase-stage">
+              <canvas id="aov-stage-spatial" aria-label="Patch field stage"></canvas>
+              <figcaption>Global patch field</figcaption>
+            </figure>
+            <figure class="rebase-stage">
+              <canvas id="aov-stage-sequence" aria-label="Token sequence stage"></canvas>
+              <figcaption>Global token sequence</figcaption>
+            </figure>
+            <figure class="rebase-stage">
+              <canvas id="aov-stage-basis" aria-label="Local basis stage"></canvas>
+              <figcaption>Local basis</figcaption>
+            </figure>
+            <figure class="rebase-stage">
+              <canvas id="aov-stage-rebased" aria-label="Rebased feature stage"></canvas>
+              <figcaption>Rebased token sequence</figcaption>
+            </figure>
+          </div>
+
+          <div class="rebase-equation-row">
+            <span>\(\bar{\mathbf{u}}_i = \frac{1}{|P_i|}\sum_{k\in P_i}\mathbf{u}_k\)</span>
+            <span>\(\mathbf{b}_{1,i} = \bar{\mathbf{u}}_i / \|\bar{\mathbf{u}}_i\|\)</span>
+            <span>\(\mathbf{u}^{\text{local}}_{i,k} = \mathbf{B}_i^{\mathsf T}\mathbf{u}_{i,k}\)</span>
+          </div>
         </div>
 
         <div class="method-box">
