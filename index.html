@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css?v=shift-window-clarity-2">
+  <link rel="stylesheet" href="./static/css/index.css?v=revit-3d-hero-4">
   <link rel="icon" href="./static/images/logo_mark_previous.svg">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -45,13 +45,13 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero revit-hero">
   <div class="hero-body">
-    <div class="container is-max-desktop">
+    <div class="container is-max-widescreen">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 18px;">
-            <img src="./static/images/logo_mark_previous.svg" alt="ReViT Logo" style="height: 130px; width: 130px;">
+          <div class="revit-title-row">
+            <img src="./static/images/logo_mark_previous.svg" alt="ReViT Logo" class="revit-title-logo">
             <h1 class="title is-1 publication-title">ReViT: Rotational-equivariant Vision Transformers for Neural PDE Solvers</h1>
           </div>
           <div class="is-size-5 publication-authors">
@@ -83,6 +83,34 @@
                   <span class="icon"><i class="fab fa-github"></i></span><span>Code</span>
                 </a>
               </span>
+            </div>
+          </div>
+
+          <div class="revit-hero-showcase" aria-label="ReViT 3D predictions across 24 rotations">
+            <figure class="revit-showcase-panel revit-showcase-main">
+              <video autoplay loop muted playsinline preload="metadata" poster="./static/images/revit_3d_mhd_velocity_poster.jpg?v=ref-pair-1" aria-label="Animated ReViT MHD velocity prediction across 24 rotations">
+                <source src="./static/images/revit_3d_mhd_velocity.mp4?v=ref-pair-1" type="video/mp4">
+                <img src="./static/images/revit_3d_mhd_velocity.gif?v=ref-pair-1" alt="Animated ReViT MHD velocity prediction across 24 rotations.">
+              </video>
+              <figcaption><span>MHD velocity</span></figcaption>
+            </figure>
+
+            <div class="revit-showcase-stack">
+              <figure class="revit-showcase-panel">
+                <video autoplay loop muted playsinline preload="metadata" poster="./static/images/revit_3d_mhd_magnetic_poster.jpg?v=ref-pair-1" aria-label="Animated ReViT MHD magnetic-field prediction across 24 rotations">
+                  <source src="./static/images/revit_3d_mhd_magnetic.mp4?v=ref-pair-1" type="video/mp4">
+                  <img src="./static/images/revit_3d_mhd_magnetic.gif?v=ref-pair-1" alt="Animated ReViT MHD magnetic-field prediction across 24 rotations.">
+                </video>
+                <figcaption><span>MHD magnetic</span></figcaption>
+              </figure>
+
+              <figure class="revit-showcase-panel">
+                <video autoplay loop muted playsinline preload="metadata" poster="./static/images/revit_3d_tcf_velocity_poster.jpg?v=ref-pair-1" aria-label="Animated ReViT turbulent-channel-flow velocity prediction across 24 rotations">
+                  <source src="./static/images/revit_3d_tcf_velocity.mp4?v=ref-pair-1" type="video/mp4">
+                  <img src="./static/images/revit_3d_tcf_velocity.gif?v=ref-pair-1" alt="Animated ReViT turbulent-channel-flow velocity prediction across 24 rotations.">
+                </video>
+                <figcaption><span>TCF velocity</span></figcaption>
+              </figure>
             </div>
           </div>
         </div>
@@ -389,7 +417,7 @@
         <!-- 3D MHD -->
         <h3 class="title is-4">3D Magnetohydrodynamics (MHD)</h3>
         <div class="content has-text-justified">
-          <p>ReViT achieves the <strong>lowest MSE (\(1.26 \times 10^{-2}\))</strong> and <strong>highest \(R^2\) (0.97)</strong>, outperforming the strongest baseline (AViT) by approximately <strong>44% in MSE</strong>. ReViT preserves sharp, high-frequency structures of the magnetic field and velocity eddies, remaining virtually indistinguishable from the reference.</p>
+          <p>ReViT achieves the <strong>lowest MSE (\(0.82 \times 10^{-2}\))</strong> and <strong>highest \(R^2\) (0.98)</strong>, outperforming the strongest baseline (AViT) by approximately <strong>44% in MSE</strong>. ReViT preserves sharp, high-frequency structures of the magnetic field and velocity eddies, remaining virtually indistinguishable from the reference.</p>
         </div>
 
         <!-- 3D TCF -->
@@ -423,7 +451,7 @@
               <tr><td>UNet3D</td><td>3.64 &plusmn; 0.93</td><td>0.90 &plusmn; 0.03</td><td>7.12 &plusmn; 3.67</td><td>-0.20 &plusmn; 0.62</td></tr>
               <tr><td>Swin3D</td><td>3.58 &plusmn; 1.19</td><td>0.90 &plusmn; 0.03</td><td>0.60 &plusmn; 0.22</td><td>0.90 &plusmn; 0.04</td></tr>
               <tr><td>AViT</td><td>2.20 &plusmn; 0.36</td><td>0.94 &plusmn; 0.01</td><td>0.60 &plusmn; 0.23</td><td>0.90 &plusmn; 0.04</td></tr>
-              <tr style="font-weight:bold; background:#f0f7ff;"><td>ReViT-3D (Ours)</td><td><strong>1.26 &plusmn; 0.14</strong></td><td><strong>0.97 &plusmn; 0.01</strong></td><td><strong>0.21 &plusmn; 0.00</strong></td><td><strong>0.96 &plusmn; 0.00</strong></td></tr>
+              <tr style="font-weight:bold; background:#f0f7ff;"><td>ReViT-3D (Ours)</td><td><strong>0.82 &plusmn; 0.00</strong></td><td><strong>0.98 &plusmn; 0.01</strong></td><td><strong>0.21 &plusmn; 0.00</strong></td><td><strong>0.96 &plusmn; 0.00</strong></td></tr>
             </tbody>
           </table>
         </div>
