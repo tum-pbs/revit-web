@@ -31,6 +31,7 @@ function setInterpolationImage(i) {
 revitReady(function() {
     if (!window.jQuery) {
       initAOVRebaseDemo();
+      initShiftWindowDemo();
       return;
     }
     // Check for click events on the navbar burger icon
@@ -87,6 +88,7 @@ revitReady(function() {
 
     bulmaSlider.attach();
     initAOVRebaseDemo();
+    initShiftWindowDemo();
 
 })
 
@@ -595,4 +597,465 @@ function initAOVRebaseDemo() {
   });
 
   setAngle(0);
+}
+
+
+function initShiftWindowDemo() {
+  var root = document.getElementById('shift-window-demo');
+  if (!root) {
+    return;
+  }
+
+  var normalCanvas = document.getElementById('shift-normal-canvas');
+  var rotatedCanvas = document.getElementById('shift-rotated-canvas');
+  if (!normalCanvas || !rotatedCanvas) {
+    return;
+  }
+
+  var rotationButtons = Array.prototype.slice.call(root.querySelectorAll('[data-rotation]'));
+  var stageButtons = Array.prototype.slice.call(root.querySelectorAll('[data-stage]'));
+  var normalCaption = document.getElementById('shift-normal-caption');
+  var rotatedCaption = document.getElementById('shift-rotated-caption');
+  var rotatedTitle = document.getElementById('shift-rotated-title');
+  var stageNote = document.getElementById('shift-stage-note');
+  var invarianceStatus = document.getElementById('shift-window-invariance');
+  var trackedWindowStatus = document.getElementById('shift-tracked-window');
+
+  var state = {
+    rotation: 90,
+    stage: 'input'
+  };
+
+  var trackedValues = [36, 37, 44, 45];
+  var trackedMap = trackedValues.reduce(function(map, value) {
+    map[value] = true;
+    return map;
+  }, {});
+  var sourceWindowColors = ['#bdd7ee', '#f8cbad', '#c6e0b4', '#e2d5e7'];
+  var palette = {
+    ink: '#172a3a',
+    muted: '#607385',
+    grid: '#ffffff',
+    cellStroke: '#ffffff',
+    window: '#bc332b',
+    highlight: '#18a957',
+    shadow: 'rgba(23, 42, 58, 0.12)'
+  };
+
+  var stageMeta = {
+    input: {
+      caption: 'Input 8x8',
+      windowSize: 4,
+      note: 'Stage 1 — Input 8x8. The 64 tokens sit in their original layout; red lines mark the four 4x4 windows the first attention block will operate over. Because attention is permutation-equivariant within each window, only the per-window token set matters — and each rotated window holds exactly the rotated counterpart of a normal window.'
+    },
+    shiftedInput: {
+      caption: 'Shift 8x8',
+      windowSize: 4,
+      note: 'Stage 2 — Shift 8x8. A cyclic roll by half a window (−2, −2) reslices the same 64 tokens into four new 4x4 windows. This is the shifted-window partition: attention here mixes tokens that were kept apart in stage 1. The roll is applied identically in both lanes; the new per-window token sets still agree.'
+    },
+    shiftedBackInput: {
+      caption: 'Shift back 8x8',
+      windowSize: 4,
+      note: 'Stage 3 — Shift back 8x8. The inverse cyclic roll (+2, +2) undoes stage 2 so the next operation sees the canonical W-MSA frame. The grid looks identical to stage 1 because roll(+s)∘roll(−s) is the identity at the token level. This is a distinct pipeline moment, separate from the patch-merge that follows.'
+    },
+    merged: {
+      caption: 'Merge → 4x4',
+      windowSize: 2,
+      note: 'Stage 4 — Patch merge → 4x4. Each unshifted 2x2 source patch is collapsed into one 4-tuple token; the grid is now 4x4 with four 2x2 windows. Merge is a standalone operation that lives between blocks — it is not part of the shift/shift-back cycle. Every merged cell prints the four source identities it carries. Window sets still match across lanes.'
+    },
+    shiftedMerge: {
+      caption: 'Shift 4x4',
+      windowSize: 2,
+      note: 'Stage 5 — Shift 4x4. A cyclic roll by 1 on the 4x4 grid reslices the merged tokens into four new 2x2 windows for the SW-MSA-style partition at the coarser scale. Same invariant as stage 2: the per-window token sets agree between normal and rotated lanes.'
+    },
+    shiftedBackMerge: {
+      caption: 'Shift back 4x4',
+      windowSize: 2,
+      note: 'Stage 6 — Shift back 4x4. The inverse cyclic roll (+1, +1) returns the merged tokens to the canonical W-MSA frame at 4x4. The grid is identical to stage 4 cell-by-cell, but it sits at a different pipeline moment: the model is now ready to hand off to patch expand.'
+    },
+    expanded: {
+      caption: 'Expand → 8x8',
+      windowSize: 4,
+      note: 'Stage 7 — Patch expand → 8x8. Each 4-tuple unfolds back into a 2x2 patch. Identity-merge composed with identity-expand puts every token back to its stage-1 position, so the whole shifted-window pipeline is identity at the token level. Expand is again standalone — separate from the shift/shift-back cycle above.'
+    }
+  };
+
+  function makeBaseGrid() {
+    var grid = [];
+    for (var r = 0; r < 8; r++) {
+      var row = [];
+      for (var c = 0; c < 8; c++) {
+        row.push(r * 8 + c);
+      }
+      grid.push(row);
+    }
+    return grid;
+  }
+
+  var baseGrid = makeBaseGrid();
+
+  function mod(value, size) {
+    return ((value % size) + size) % size;
+  }
+
+  function rotateGridOnce(grid) {
+    var rows = grid.length;
+    var cols = grid[0].length;
+    var out = [];
+    for (var r = 0; r < cols; r++) {
+      var row = [];
+      for (var c = 0; c < rows; c++) {
+        row.push(grid[c][cols - 1 - r]);
+      }
+      out.push(row);
+    }
+    return out;
+  }
+
+  function rotateGrid(grid, turns) {
+    var out = grid;
+    var count = mod(turns, 4);
+    for (var i = 0; i < count; i++) {
+      out = rotateGridOnce(out);
+    }
+    return out;
+  }
+
+  function rollGrid(grid, rowShift, colShift) {
+    var rows = grid.length;
+    var cols = grid[0].length;
+    var out = [];
+    for (var r = 0; r < rows; r++) {
+      var row = [];
+      for (var c = 0; c < cols; c++) {
+        row.push(grid[mod(r - rowShift, rows)][mod(c - colShift, cols)]);
+      }
+      out.push(row);
+    }
+    return out;
+  }
+
+  function downsample(grid) {
+    var out = [];
+    for (var r = 0; r < grid.length / 2; r++) {
+      var row = [];
+      for (var c = 0; c < grid[0].length / 2; c++) {
+        row.push([
+          grid[2 * r][2 * c],
+          grid[2 * r + 1][2 * c],
+          grid[2 * r][2 * c + 1],
+          grid[2 * r + 1][2 * c + 1]
+        ]);
+      }
+      out.push(row);
+    }
+    return out;
+  }
+
+  function expand(grid, rowsOut, colsOut) {
+    var out = [];
+    for (var r = 0; r < rowsOut; r++) {
+      var row = [];
+      for (var c = 0; c < colsOut; c++) {
+        var coarseR = Math.min(Math.floor(r / 2), grid.length - 1);
+        var coarseC = Math.min(Math.floor(c / 2), grid[0].length - 1);
+        var tupleIndex = (r % 2) + (c % 2) * 2;
+        row.push(grid[coarseR][coarseC][tupleIndex]);
+      }
+      out.push(row);
+    }
+    return out;
+  }
+
+  function buildLane(turns) {
+    var input = rotateGrid(baseGrid, turns);
+    var shiftedInput = rollGrid(input, -2, -2);
+    var shiftedBackInput = rollGrid(shiftedInput, 2, 2);
+    var merged = downsample(shiftedBackInput);
+    var shiftedMerge = rollGrid(merged, -1, -1);
+    var shiftedBackMerge = rollGrid(shiftedMerge, 1, 1);
+    return {
+      input: input,
+      shiftedInput: shiftedInput,
+      shiftedBackInput: shiftedBackInput,
+      merged: merged,
+      shiftedMerge: shiftedMerge,
+      shiftedBackMerge: shiftedBackMerge,
+      expanded: expand(shiftedBackMerge, 8, 8)
+    };
+  }
+
+  function partitionIntoWindows(grid, windowSize) {
+    var rows = grid.length;
+    var cols = grid[0].length;
+    var windows = [];
+    for (var wr = 0; wr < rows; wr += windowSize) {
+      for (var wc = 0; wc < cols; wc += windowSize) {
+        var tokens = [];
+        var has = {};
+        for (var r = wr; r < wr + windowSize; r++) {
+          for (var c = wc; c < wc + windowSize; c++) {
+            var values = cellValues(grid[r][c]);
+            for (var k = 0; k < values.length; k++) {
+              tokens.push(values[k]);
+              if (trackedMap[values[k]]) {
+                has.tracked = true;
+              }
+            }
+          }
+        }
+        tokens.sort(function(a, b) { return a - b; });
+        windows.push({ tokens: tokens, hasTracked: !!has.tracked, row: wr / windowSize, col: wc / windowSize });
+      }
+    }
+    return windows;
+  }
+
+  function windowSetsMatch(gridA, gridB, windowSize) {
+    var wa = partitionIntoWindows(gridA, windowSize);
+    var wb = partitionIntoWindows(gridB, windowSize);
+    if (wa.length !== wb.length) {
+      return false;
+    }
+    var keyA = wa.map(function(w) { return w.tokens.join(','); }).sort();
+    var keyB = wb.map(function(w) { return w.tokens.join(','); }).sort();
+    for (var i = 0; i < keyA.length; i++) {
+      if (keyA[i] !== keyB[i]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function describeTrackedWindow(grid, windowSize) {
+    var windows = partitionIntoWindows(grid, windowSize);
+    var grid_windows_per_row = Math.round(grid.length / windowSize);
+    var labels = [];
+    for (var i = 0; i < windows.length; i++) {
+      if (windows[i].hasTracked) {
+        var rr = windows[i].row;
+        var cc = windows[i].col;
+        labels.push('window (' + rr + ',' + cc + ')');
+      }
+    }
+    if (labels.length === 0) {
+      return 'no window';
+    }
+    return labels.join(' & ');
+  }
+
+  function canvasBox(canvas) {
+    var rect = canvas.getBoundingClientRect();
+    var width = rect.width || 360;
+    var height = rect.height || width * 0.75;
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var pixelWidth = Math.max(1, Math.round(width * dpr));
+    var pixelHeight = Math.max(1, Math.round(height * dpr));
+    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+      canvas.width = pixelWidth;
+      canvas.height = pixelHeight;
+    }
+    var ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, width, height);
+    return { ctx: ctx, width: width, height: height };
+  }
+
+  function colorForValue(value) {
+    var row = Math.floor(value / 8);
+    var col = value % 8;
+    var windowRow = Math.floor(row / 4);
+    var windowCol = Math.floor(col / 4);
+    return sourceWindowColors[windowRow * 2 + windowCol];
+  }
+
+  function cellValues(cell) {
+    return Array.isArray(cell) ? cell : [cell];
+  }
+
+  function cellHasTrackedValue(cell) {
+    var values = cellValues(cell);
+    for (var i = 0; i < values.length; i++) {
+      if (trackedMap[values[i]]) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  function drawRoundedRect(ctx, x, y, width, height, radius) {
+    var r = Math.min(radius, width / 2, height / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + width - r, y);
+    ctx.quadraticCurveTo(x + width, y, x + width, y + r);
+    ctx.lineTo(x + width, y + height - r);
+    ctx.quadraticCurveTo(x + width, y + height, x + width - r, y + height);
+    ctx.lineTo(x + r, y + height);
+    ctx.quadraticCurveTo(x, y + height, x, y + height - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+  }
+
+  function drawCellText(ctx, cell, x, y, size) {
+    ctx.fillStyle = '#111820';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    if (Array.isArray(cell)) {
+      var fontSize = Math.max(8, Math.min(13, size * 0.18));
+      ctx.font = '800 ' + fontSize + 'px "Noto Sans", sans-serif';
+      ctx.fillText(cell[0] + ',' + cell[2], x + size / 2, y + size * 0.39);
+      ctx.fillText(cell[1] + ',' + cell[3], x + size / 2, y + size * 0.62);
+    } else {
+      var singleFont = Math.max(9, Math.min(14, size * 0.36));
+      ctx.font = '800 ' + singleFont + 'px "Noto Sans", sans-serif';
+      ctx.fillText(String(cell), x + size / 2, y + size / 2);
+    }
+  }
+
+  function drawWindowLines(ctx, x, y, gridSize, cellSize, windowSize) {
+    ctx.save();
+    ctx.strokeStyle = palette.window;
+    ctx.lineWidth = Math.max(2, cellSize * 0.05);
+    for (var i = 0; i <= gridSize; i += windowSize) {
+      ctx.beginPath();
+      ctx.moveTo(x + i * cellSize, y);
+      ctx.lineTo(x + i * cellSize, y + gridSize * cellSize);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(x, y + i * cellSize);
+      ctx.lineTo(x + gridSize * cellSize, y + i * cellSize);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawGrid(canvas, grid, meta, laneLabel) {
+    var box = canvasBox(canvas);
+    var ctx = box.ctx;
+    var width = box.width;
+    var height = box.height;
+    var gridSize = grid.length;
+    var topLabel = 24;
+    var pad = 18;
+    var available = Math.min(width - pad * 2, height - topLabel - pad * 1.4);
+    var cellSize = available / gridSize;
+    var gridPixels = cellSize * gridSize;
+    var startX = (width - gridPixels) / 2;
+    var startY = topLabel + (height - topLabel - gridPixels) / 2;
+
+    ctx.save();
+    ctx.fillStyle = '#fbfcfe';
+    ctx.fillRect(0, 0, width, height);
+    ctx.fillStyle = palette.muted;
+    ctx.font = '800 12px "Noto Sans", sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(laneLabel, 16, 16);
+    ctx.restore();
+
+    ctx.save();
+    ctx.shadowColor = palette.shadow;
+    ctx.shadowBlur = 10;
+    ctx.shadowOffsetY = 3;
+    drawRoundedRect(ctx, startX - 1, startY - 1, gridPixels + 2, gridPixels + 2, 7);
+    ctx.fillStyle = '#ffffff';
+    ctx.fill();
+    ctx.restore();
+
+    for (var r = 0; r < gridSize; r++) {
+      for (var c = 0; c < gridSize; c++) {
+        var cell = grid[r][c];
+        var values = cellValues(cell);
+        ctx.fillStyle = colorForValue(values[0]);
+        ctx.fillRect(startX + c * cellSize, startY + r * cellSize, cellSize, cellSize);
+        ctx.strokeStyle = palette.cellStroke;
+        ctx.lineWidth = 1;
+        ctx.strokeRect(startX + c * cellSize, startY + r * cellSize, cellSize, cellSize);
+      }
+    }
+
+    for (var tr = 0; tr < gridSize; tr++) {
+      for (var tc = 0; tc < gridSize; tc++) {
+        var x = startX + tc * cellSize;
+        var y = startY + tr * cellSize;
+        drawCellText(ctx, grid[tr][tc], x, y, cellSize);
+        if (cellHasTrackedValue(grid[tr][tc])) {
+          ctx.save();
+          ctx.strokeStyle = palette.highlight;
+          ctx.lineWidth = Math.max(3, cellSize * 0.08);
+          ctx.strokeRect(x + cellSize * 0.1, y + cellSize * 0.1, cellSize * 0.8, cellSize * 0.8);
+          ctx.restore();
+        }
+      }
+    }
+
+    drawWindowLines(ctx, startX, startY, gridSize, cellSize, meta.windowSize);
+  }
+
+  function render() {
+    var turns = state.rotation / 90;
+    var normalLane = buildLane(0);
+    var rotatedLane = buildLane(turns);
+    var meta = stageMeta[state.stage];
+    drawGrid(normalCanvas, normalLane[state.stage], meta, 'normal lane');
+    drawGrid(rotatedCanvas, rotatedLane[state.stage], meta, state.rotation + ' deg lane');
+
+    if (normalCaption) {
+      normalCaption.textContent = meta.caption;
+    }
+    if (rotatedCaption) {
+      rotatedCaption.textContent = meta.caption;
+    }
+    if (rotatedTitle) {
+      rotatedTitle.textContent = 'Rotated input ' + state.rotation + ' deg';
+    }
+    if (stageNote) {
+      stageNote.textContent = meta.note;
+    }
+
+    var normalGrid = normalLane[state.stage];
+    var rotatedGrid = rotatedLane[state.stage];
+    var setsMatch = windowSetsMatch(normalGrid, rotatedGrid, meta.windowSize);
+    if (invarianceStatus) {
+      invarianceStatus.textContent = setsMatch
+        ? 'all ' + (normalGrid.length / meta.windowSize) * (normalGrid[0].length / meta.windowSize) + ' window sets match'
+        : 'window sets disagree';
+    }
+    if (trackedWindowStatus) {
+      var normalDesc = describeTrackedWindow(normalGrid, meta.windowSize);
+      var rotatedDesc = describeTrackedWindow(rotatedGrid, meta.windowSize);
+      trackedWindowStatus.textContent = 'normal ' + normalDesc + ' · rotated ' + rotatedDesc;
+    }
+
+    rotationButtons.forEach(function(button) {
+      button.classList.toggle('is-active', Number(button.dataset.rotation) === state.rotation);
+    });
+    stageButtons.forEach(function(button) {
+      button.classList.toggle('is-active', button.dataset.stage === state.stage);
+    });
+  }
+
+  rotationButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      state.rotation = Number(button.dataset.rotation) || 90;
+      render();
+    });
+  });
+
+  stageButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      state.stage = button.dataset.stage || 'expanded';
+      render();
+    });
+  });
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function() {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(render, 80);
+  });
+
+  render();
 }

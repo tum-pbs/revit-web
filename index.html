@@ -12,13 +12,13 @@
   <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="stylesheet" href="./static/css/index.css?v=shift-window-clarity-2">
   <link rel="icon" href="./static/images/logo_mark_previous.svg">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
   <script src="./static/js/bulma-carousel.min.js"></script>
   <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+  <script src="./static/js/index.js?v=shift-window-clarity-2"></script>
   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
@@ -188,9 +188,9 @@
           </div>
 
           <div class="rebase-figure-guide">
-            <span><strong>Orange box:</strong> selected patch used to show the patch-level basis.</span>
-            <span><strong>Global vector</strong> \(\mathbf{u}\): drawn in the fixed \(X\)-\(Y\) basis.</span>
-            <span><strong>Rebased vector</strong> \(\mathbf{u}^{\text{local}}=\mathbf{B}_i^{\mathsf T}\mathbf{u}\): drawn in the co-rotating local basis.</span>
+            <span><strong>Red box:</strong> selected patch used to show the patch-level basis.</span>
+            <span><strong>Global vector</strong> \(\mathbf{u}\): orange, drawn in the fixed \(X\)-\(Y\) basis.</span>
+            <span><strong>Rebased vector</strong> \(\mathbf{u}^{\text{local}}=\mathbf{B}_i^{\mathsf T}\mathbf{u}\): green, drawn in the co-rotating local basis.</span>
           </div>
 
           <div class="rebase-panels">
@@ -217,15 +217,15 @@
             </figure>
             <figure class="rebase-stage">
               <canvas id="aov-stage-sequence" aria-label="Token sequence stage"></canvas>
-              <figcaption>Global token sequence</figcaption>
+              <figcaption>Global token sequence (co-rotating)</figcaption>
             </figure>
             <figure class="rebase-stage">
               <canvas id="aov-stage-basis" aria-label="Local basis stage"></canvas>
-              <figcaption>Local basis</figcaption>
+              <figcaption>Local basis (co-rotating)</figcaption>
             </figure>
             <figure class="rebase-stage">
               <canvas id="aov-stage-rebased" aria-label="Rebased feature stage"></canvas>
-              <figcaption>Rebased token sequence</figcaption>
+              <figcaption>Rebased token sequence (invariant to rotation)</figcaption>
             </figure>
           </div>
 
@@ -266,6 +266,73 @@
         <div class="method-box">
           <h4 class="title is-5" style="margin-bottom: 0.5rem;">5. Reference Basis Pyramid</h4>
           <p>A pyramid of local canonical bases \(\mathcal{B}^{(l)} = \{\mathbf{B}_k^{(l)}\}\) is pre-computed at each resolution \(l\). Resolution changes use a <strong>&ldquo;globalize&ndash;resample&ndash;localize&rdquo;</strong> procedure, ensuring rotation-invariance across all scales.</p>
+        </div>
+
+        <div class="shift-window-interactive" id="shift-window-demo">
+          <div class="shift-window-header">
+            <p class="rebase-kicker">Interactive Shifted Windows</p>
+            <h3 class="title is-4">Same Tokens, Same Windows &mdash; Across Rotation</h3>
+            <p>ReViT leverages the <em>permutation-equivariance</em> of self-attention applied in each window, so the only thing the shifted-window pipeline needs to guarantee for global rotation equivariance is this: <strong>the set of tokens that share a window is the same in the normal lane and in the rotated lane</strong>. No attention is drawn here &mdash; the fake numbers label token identity so you can trace them through the cycle. Step through the stages to watch which tokens land in which window at each moment where attention would run. </p>
+          </div>
+
+          <div class="shift-control-bar">
+            <div class="shift-control-group">
+              <span class="shift-control-label">Rotated lane</span>
+              <div class="shift-button-row" id="shift-rotation-buttons" role="group" aria-label="Rotated lane angle">
+                <button class="shift-button" type="button" data-rotation="90">90&deg;</button>
+                <button class="shift-button" type="button" data-rotation="180">180&deg;</button>
+                <button class="shift-button" type="button" data-rotation="270">270&deg;</button>
+              </div>
+            </div>
+
+            <div class="shift-control-group shift-stage-control">
+              <span class="shift-control-label">Pipeline step</span>
+              <div class="shift-button-row" id="shift-stage-buttons" role="group" aria-label="Shifted-window pipeline step">
+                <button class="shift-button" type="button" data-stage="input">1. Input 8&times;8</button>
+                <button class="shift-button" type="button" data-stage="shiftedInput">2. Shift 8&times;8</button>
+                <button class="shift-button" type="button" data-stage="shiftedBackInput">3. Shift back 8&times;8</button>
+                <button class="shift-button" type="button" data-stage="merged">4. Merge &rarr; 4&times;4</button>
+                <button class="shift-button" type="button" data-stage="shiftedMerge">5. Shift 4&times;4</button>
+                <button class="shift-button" type="button" data-stage="shiftedBackMerge">6. Shift back 4&times;4</button>
+                <button class="shift-button" type="button" data-stage="expanded">7. Expand &rarr; 8&times;8</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="shift-window-panels">
+            <figure class="shift-window-panel">
+              <figcaption>
+                <span>Normal lane</span>
+                <span id="shift-normal-caption">Input 8&times;8</span>
+              </figcaption>
+              <canvas id="shift-normal-canvas" aria-label="Normal shifted-window pipeline"></canvas>
+            </figure>
+            <figure class="shift-window-panel">
+              <figcaption>
+                <span id="shift-rotated-title">Rotated lane</span>
+                <span id="shift-rotated-caption">Input 8&times;8</span>
+              </figcaption>
+              <canvas id="shift-rotated-canvas" aria-label="Rotated shifted-window pipeline"></canvas>
+            </figure>
+          </div>
+
+          <div class="shift-proof-row">
+            <div class="shift-proof-card">
+              <span>Tracked identity set</span>
+              <strong id="shift-tracked-values">36, 37, 44, 45</strong>
+            </div>
+            <div class="shift-proof-card">
+              <span>Window-set invariance at this stage</span>
+              <strong id="shift-window-invariance">windows match across lanes</strong>
+            </div>
+            <div class="shift-proof-card">
+              <span>Tracked tokens in &hellip;</span>
+              <strong id="shift-tracked-window">&mdash;</strong>
+            </div>
+          </div>
+
+          <p class="shift-stage-note" id="shift-stage-note">Stage 1 &mdash; Input 8&times;8 partitioned into four 4&times;4 windows.</p>
+
         </div>
 
         <div class="insight-box">
