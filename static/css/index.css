@@ -325,6 +325,135 @@ body {
   color: #1a3a5c;
 }
 
+/* Challenge item with illustration */
+.challenge-illustrated {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.25rem;
+  align-items: center;
+}
+
+.challenge-illustrated .challenge-text {
+  flex: 1;
+}
+
+.challenge-illustrated .challenge-diagram {
+  max-width: 280px;
+  min-width: 160px;
+}
+
+.challenge-illustrated .challenge-diagram img {
+  width: 100%;
+  display: block;
+  border-radius: 6px;
+}
+
+/* Illustrated method box (two-column: text + diagram) */
+.method-box-illustrated {
+  background: linear-gradient(135deg, #f0f4f8, #e8edf2);
+  border-left: 4px solid hsl(204, 86%, 53%);
+  border-radius: 0 8px 8px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.method-box-illustrated .title {
+  color: #1a3a5c;
+}
+
+.method-box-illustrated .method-text {
+  min-width: 0;
+}
+
+.method-box-illustrated .method-diagram {
+  max-width: 340px;
+  min-width: 180px;
+}
+
+.method-box-illustrated .method-diagram img {
+  width: 100%;
+  display: block;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.5rem;
+  border: 1px solid #dce4ec;
+}
+
+/* Full-width diagram variant for large diagrams */
+.method-box-wide-diagram {
+  background: linear-gradient(135deg, #f0f4f8, #e8edf2);
+  border-left: 4px solid hsl(204, 86%, 53%);
+  border-radius: 0 8px 8px 0;
+  padding: 1.25rem 1.5rem;
+  margin: 1rem 0;
+}
+
+.method-box-wide-diagram .title {
+  color: #1a3a5c;
+}
+
+.method-box-wide-diagram .method-diagram-wide {
+  margin-top: 1rem;
+}
+
+.method-box-wide-diagram .method-diagram-wide img {
+  width: 100%;
+  max-width: 700px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.75rem;
+  border: 1px solid #dce4ec;
+}
+
+/* Paired challenge→solution row */
+.cs-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.cs-pair .cs-challenge {
+  background: #fff0ef;
+  border-left: 4px solid #da2929;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+}
+
+.cs-pair .cs-challenge strong:first-child {
+  color: #b91c1c;
+}
+
+.cs-pair .cs-solution {
+  background: #ecfdf5;
+  border-left: 4px solid #009e3d;
+  border-radius: 0 8px 8px 0;
+  padding: 1rem 1.25rem;
+}
+
+.cs-pair .cs-solution strong:first-child {
+  color: #047857;
+}
+
+.cs-pair .cs-diagram {
+  margin-top: 0.75rem;
+}
+
+.cs-pair .cs-diagram img {
+  width: 100%;
+  display: block;
+  border-radius: 6px;
+  background: #fff;
+  padding: 0.4rem;
+  border: 1px solid #e5e7eb;
+}
+
 /* BibTeX section */
 #BibTeX pre {
   background: #1a2332;
@@ -702,6 +831,28 @@ body {
   .revit-title-logo {
     width: 96px;
     height: 96px;
+  }
+
+  .challenge-illustrated {
+    grid-template-columns: 1fr;
+  }
+
+  .challenge-illustrated .challenge-diagram {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .method-box-illustrated {
+    grid-template-columns: 1fr;
+  }
+
+  .method-box-illustrated .method-diagram {
+    max-width: 360px;
+    margin: 0 auto;
+  }
+
+  .cs-pair {
+    grid-template-columns: 1fr;
   }
 
   .rebase-control-bar {
