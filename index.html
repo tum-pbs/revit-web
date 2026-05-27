@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css?v=revit-3d-hero-4">
+  <link rel="stylesheet" href="./static/css/index.css?v=tikz-diagrams-1">
   <link rel="icon" href="./static/images/logo_mark_previous.svg">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -161,13 +161,23 @@
           <p>We consider a physical field \(\mathbf{f}: \Omega \rightarrow \mathcal{V}\) on a spatial domain \(\Omega \subset \mathbb{R}^d\). For a <em>vector field</em> \(\mathbf{u}\), the rotation group acts on both the domain and the value: \([L_g \mathbf{u}](x) = \mathbf{R}(g)\mathbf{u}(\mathbf{R}(g)^{-1}x)\). A neural network \(\Phi\) is <em>equivariant</em> if \(\Phi(L_g \mathbf{u}) = L_g \Phi(\mathbf{u})\). We identify <strong>three distinct mechanisms</strong> by which standard ViTs violate rotational equivariance:</p>
         </div>
 
-        <div class="challenge-item">
-          <strong>C1. The Tokenization Barrier.</strong>
-          Standard patch embeddings flatten the vector field within \(P_i\) into \(\mathbf{v} \in \mathbb{R}^{K^d \cdot d}\) and apply a learnable linear map \(\mathbf{E}\). Under rotation \(g\), pixels permute to \(\pi_g \mathbf{v}\), but \(\mathbf{E}(\pi_g \mathbf{v}) \neq \mathbf{E}(\mathbf{v})\)&mdash;projecting rotated patterns into disjoint latent regions.
+        <div class="challenge-item challenge-illustrated">
+          <div class="challenge-text">
+            <strong>C1. The Tokenization Barrier.</strong>
+            Standard patch embeddings flatten the vector field within \(P_i\) into \(\mathbf{v} \in \mathbb{R}^{K^d \cdot d}\) and apply a learnable linear map \(\mathbf{E}\). Under rotation \(g\), pixels permute to \(\pi_g \mathbf{v}\), but \(\mathbf{E}(\pi_g \mathbf{v}) \neq \mathbf{E}(\mathbf{v})\)&mdash;projecting rotated patterns into disjoint latent regions.
+          </div>
+          <div class="challenge-diagram">
+            <img src="./static/images/fig_c1.png" alt="C1: Tokenization barrier — flattening a rotated patch maps it to a different raster vector.">
+          </div>
         </div>
-        <div class="challenge-item">
-          <strong>C2. Loss of Spatial Equivariance.</strong>
-          Absolute PEs break equivariance since \(\mathbf{P}(\mathbf{R}(g)x) \neq \boldsymbol{\pi}_g \mathbf{P}(x)\). Relative PEs depend on \(\boldsymbol{\delta}_{ij} = x_j - x_i\), restoring translation equivariance, but an <em>isotropic</em> function like \(\|x_i - x_j\|\) discards all directional information.
+        <div class="challenge-item challenge-illustrated">
+          <div class="challenge-text">
+            <strong>C2. Loss of Spatial Equivariance.</strong>
+            Absolute PEs break equivariance since \(\mathbf{P}(\mathbf{R}(g)x) \neq \boldsymbol{\pi}_g \mathbf{P}(x)\). Relative PEs depend on \(\boldsymbol{\delta}_{ij} = x_j - x_i\), restoring translation equivariance, but an <em>isotropic</em> function like \(\|x_i - x_j\|\) discards all directional information.
+          </div>
+          <div class="challenge-diagram">
+            <img src="./static/images/fig_c2.png" alt="C2: PE dilemma — existing PEs are either directional or equivariant, never both.">
+          </div>
         </div>
         <div class="challenge-item">
           <strong>C3. The Representational Mismatch.</strong>
@@ -264,36 +274,77 @@
           </div>
         </div>
 
-        <div class="method-box">
-          <h4 class="title is-5" style="margin-bottom: 0.5rem;">1. Local Canonicalization</h4>
-          <p>For each patch \(P_i\), we compute a <em>Local Canonical Basis</em> \(\mathbf{B}_i \in SO(d)\) deterministically from the field values. Vectors are projected into local frames: \(\mathbf{u}^{\text{local}}_{i,k} = \mathbf{B}_i^T \mathbf{u}_k\). This is provably invariant:</p>
-          <div class="equation-highlight">
-            $$(\mathbf{R}(g)\mathbf{B}_i)^{T} (\mathbf{R}(g)\mathbf{u}_i^{\text{global}}) = \mathbf{B}_i^{T} \mathbf{R}(g)^{T} \mathbf{R}(g) \mathbf{u}_i^{\text{global}} = \mathbf{B}_i^{T} \mathbf{u}_i^{\text{global}} = \mathbf{u}^{\text{local}}_{i,k}$$
+        <div class="method-box-illustrated">
+          <div class="method-text">
+            <h4 class="title is-5" style="margin-bottom: 0.5rem;">1. Local Canonicalization <span style="color:#999;font-size:0.85rem;font-weight:400;">&mdash; solves C3</span></h4>
+            <p>For each patch \(P_i\), we compute a <em>Local Canonical Basis</em> \(\mathbf{B}_i \in SO(d)\) deterministically from the field values. Vectors are projected into local frames: \(\mathbf{u}^{\text{local}}_{i,k} = \mathbf{B}_i^T \mathbf{u}_k\). This is provably invariant:</p>
+            <div class="equation-highlight">
+              $$\begin{aligned}
+              (\mathbf{R}(g)\mathbf{B}_i)^{T} (\mathbf{R}(g)\mathbf{u}_i^{\text{global}})
+              &= \mathbf{B}_i^{T} \mathbf{R}(g)^{T} \mathbf{R}(g) \mathbf{u}_i^{\text{global}} \\
+              &= \mathbf{B}_i^{T} \mathbf{u}_i^{\text{global}} \\
+              &= \mathbf{u}^{\text{local}}_{i,k}
+              \end{aligned}$$
+            </div>
+            <p>In 3D, the basis is derived from the mean velocity \(\bar{\mathbf{u}}_i\) and mean vorticity \(\bar{\boldsymbol{\omega}}_i\), using stabilized analytical orthogonalization based on sequential cross-products.</p>
           </div>
-          <p>In 3D, the basis is derived from the mean velocity \(\bar{\mathbf{u}}_i\) and mean vorticity \(\bar{\boldsymbol{\omega}}_i\), using stabilized analytical orthogonalization based on sequential cross-products.</p>
-        </div>
-
-        <div class="method-box">
-          <h4 class="title is-5" style="margin-bottom: 0.5rem;">2. Invariant Patch Aggregation</h4>
-          <p>Instead of flattening patches (which breaks under rotation-induced permutations, C1), we treat the projected local vectors as a set of invariant features \(\mathcal{X}_i = \{\mathbf{h}_{i,k} \mid k \in P_i\}\) where \(\mathbf{h}_{i,k} = \text{MLP}(\mathbf{u}^{\text{local}}_{i,k})\). A Set-Transformer with a learnable query token aggregates them: \(\text{Agg}(\pi(\mathcal{X}_i)) = \text{Agg}(\mathcal{X}_i)\), ensuring rotation-invariant tokens.</p>
-        </div>
-
-        <div class="method-box">
-          <h4 class="title is-5" style="margin-bottom: 0.5rem;">3. Rebased Relative Positional Encoding</h4>
-          <p>We project displacement vectors into the query token's local basis: \(\mathbf{p}_{ij \to i} = \mathbf{B}_i^T(x_j - x_i)\). This is invariant to global rotations while preserving local anisotropy. The modified self-attention becomes:</p>
-          <div class="equation-highlight">
-            $$\text{SA}(\mathbf{X}) = \text{softmax}\left(\frac{\mathbf{X}\mathbf{W}_Q (\mathbf{X}\mathbf{W}_K)^T}{\sqrt{d_k}}+\mathbf{P}\right)\mathbf{X}\mathbf{W}_V$$
+          <div class="method-diagram">
+            <img src="./static/images/fig_sol3.png" alt="S3: Local canonical basis — project vectors via B_i^T from global to local frame.">
           </div>
         </div>
 
-        <div class="method-box">
-          <h4 class="title is-5" style="margin-bottom: 0.5rem;">4. Equivariant Decoder</h4>
-          <p>Local predictions are lifted back to global coordinates: \(\mathbf{u}'_{i} = \mathbf{B}_i \cdot \mathbf{z}^{\text{local}}_{i}\). Since \(\mathbf{z}^{\text{local}}\) is invariant and \(\mathbf{B}_i\) co-rotates with the input, the output is strictly equivariant.</p>
+        <div class="method-box-illustrated">
+          <div class="method-text">
+            <h4 class="title is-5" style="margin-bottom: 0.5rem;">2. Invariant Patch Aggregation <span style="color:#999;font-size:0.85rem;font-weight:400;">&mdash; solves C1</span></h4>
+            <p>Instead of flattening patches (which breaks under rotation-induced permutations, C1), we treat each patch as a <strong>permutation-invariant set</strong>:</p>
+            <p><strong>Step 1.</strong> Map each local vector through an MLP to obtain invariant features:</p>
+            <div class="equation-highlight">
+              $$\mathcal{X}_i = \{\mathbf{h}_{i,k} \mid k \in P_i\}, \quad \mathbf{h}_{i,k} = \text{MLP}(\mathbf{u}^{\text{local}}_{i,k})$$
+            </div>
+            <p><strong>Step 2.</strong> Aggregate with a Set-Transformer: concatenate a learnable query token \(\mathbf{h}_{\text{query}}\) with the set, apply self-attention, and extract the query output:</p>
+            <div class="equation-highlight">
+              $$\mathbf{H} = [\mathbf{h}_{\text{query}},\, \mathbf{h}_1, \dots, \mathbf{h}_{K^d}], \quad \mathbf{z}_i = \text{SA}(\mathbf{H})[0]$$
+            </div>
+            <p><strong>Result.</strong> The aggregation is strictly permutation-invariant&mdash;pixel ordering within the patch is irrelevant:</p>
+            <div class="equation-highlight">
+              $$\text{Agg}(\pi(\mathcal{X}_i)) = \text{Agg}(\mathcal{X}_i)$$
+            </div>
+          </div>
+          <div class="method-diagram">
+            <img src="./static/images/fig_sol1.png" alt="S1: Set-Transformer aggregation — patch vectors → MLP → set → query token → z_i.">
+          </div>
+        </div>
+
+        <div class="method-box-illustrated">
+          <div class="method-text">
+            <h4 class="title is-5" style="margin-bottom: 0.5rem;">3. Rebased Relative Positional Encoding <span style="color:#999;font-size:0.85rem;font-weight:400;">&mdash; solves C2</span></h4>
+            <p>We project displacement vectors into the query token's local basis: \(\mathbf{p}_{ij \to i} = \mathbf{B}_i^T(x_j - x_i)\). This is invariant to global rotations while preserving local anisotropy. The modified self-attention becomes:</p>
+            <div class="equation-highlight">
+              $$\text{SA}(\mathbf{X}) = \text{softmax}\left(\frac{\mathbf{X}\mathbf{W}_Q (\mathbf{X}\mathbf{W}_K)^T}{\sqrt{d_k}}+\mathbf{P}\right)\mathbf{X}\mathbf{W}_V$$
+            </div>
+          </div>
+          <div class="method-diagram">
+            <img src="./static/images/fig_sol2.png" alt="S2: Rebased PE — project displacement δ_ij into local basis B_i^T for directional yet equivariant encoding.">
+          </div>
+        </div>
+
+        <div class="method-box-illustrated">
+          <div class="method-text">
+            <h4 class="title is-5" style="margin-bottom: 0.5rem;">4. Equivariant Decoder</h4>
+            <p>The transformer outputs invariant tokens \(\mathbf{h}_i^{(L)}\). A local query decoder uses a canonical grid \(\mathcal{G} = \{\mathbf{\xi}_m \in [-1,1]^d\}\) mapped via Fourier features as spatial queries. Cross-attention reconstructs dense spatial details:</p>
+            <div class="equation-highlight">
+              $$\mathbf{z}^{\text{local}}_{i} = \text{CrossAttn}\left(\mathbf{Q}_{\text{grid}},\, \mathbf{h}_i^{(L)}\right)$$
+            </div>
+            <p>Predictions are lifted back to global coordinates: \(\mathbf{u}'_{i} = \mathbf{B}_i \cdot \mathbf{z}^{\text{local}}_{i}\). Since \(\mathbf{z}^{\text{local}}\) is invariant and \(\mathbf{B}_i\) co-rotates with the input, the output is strictly equivariant.</p>
+          </div>
+          <div class="method-diagram">
+            <img src="./static/images/fig_decoder.png" alt="Equivariant Decoder: canonical grid → Fourier features → CrossAttn → z^local (invariant) → B_i lift → u' (equivariant).">
+          </div>
         </div>
 
         <div class="method-box">
           <h4 class="title is-5" style="margin-bottom: 0.5rem;">5. Reference Basis Pyramid</h4>
-          <p>A pyramid of local canonical bases \(\mathcal{B}^{(l)} = \{\mathbf{B}_k^{(l)}\}\) is pre-computed at each resolution \(l\). Resolution changes use a <strong>&ldquo;globalize&ndash;resample&ndash;localize&rdquo;</strong> procedure, ensuring rotation-invariance across all scales.</p>
+          <p>A pyramid of local canonical bases \(\mathcal{B}^{(l)} = \{\mathbf{B}_k^{(l)}\}\) is pre-computed at each resolution \(l\) from the input field. Standard patch merging is invalid for invariant tokens (averaging vectors in disparate local bases breaks physical consistency). Resolution changes use a <strong>&ldquo;globalize&ndash;resample&ndash;localize&rdquo;</strong> procedure: features are projected back to the global frame, undergo valid spatial operations (pooling/interpolation), and are re-projected into the target resolution's local bases&mdash;ensuring rotation-invariance across all scales.</p>
         </div>
 
         <div class="shift-window-interactive" id="shift-window-demo">
