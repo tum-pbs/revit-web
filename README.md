@@ -1,6 +1,6 @@
 # ReViT: Rotational-equivariant Vision Transformers for Neural PDE Solvers
 
-### [Project Page](https://howw-way.github.io/revit-web/) | [Paper (coming soon)](#) | [Code](https://github.com/tum-pbs/revit)
+### [Project Page](https://tum-pbs.github.io/revit-web/) | [Paper (coming soon)](#) | [Code](https://github.com/tum-pbs/revit)
 
 **Oral at ICML 2026**
 
