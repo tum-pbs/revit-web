@@ -1,10 +1,10 @@
 # ReViT: Rotational-equivariant Vision Transformers for Neural PDE Solvers
 
-### [Project Page](https://tum-pbs.github.io/revit-web/) | [Paper (coming soon)](#) | [Code](https://github.com/tum-pbs/revit)
+### [Project Page](https://tum-pbs.github.io/revit-web/) | [Paper](https://ge.in.tum.de/download/wei-icml2026-revit.pdf) | [Code](https://github.com/tum-pbs/revit)
 
 **Oral at ICML 2026**
 
-[Hao Wei](https://ge.in.tum.de/about/m-eng-hao-wei-phd-candidate/), [Bjoern List](https://ge.in.tum.de/about/bjorn-list/), [Nils Thuerey](https://ge.in.tum.de/about/n-thuerey/)
+[Hao Wei](https://howw-way.github.io/personal-web/), [Bjoern List](https://ge.in.tum.de/about/bjorn-list/), [Nils Thuerey](https://ge.in.tum.de/about/n-thuerey/)
 
 Technical University of Munich
 
@@ -24,10 +24,9 @@ Technical University of Munich
 
 ```bibtex
 @inproceedings{ReViT2026,
-  title     = {{ReViT}: Rotational-equivariant Vision Transformers
-               for Neural {PDE} Solvers},
+  title     = {{ReViT}: Rotational-equivariant Vision Transformers for Neural {PDE} Solvers},
   author    = {Hao Wei and Bjoern List and Nils Thuerey},
-  booktitle = {International Conference on Machine Learning (ICML)},
+  booktitle = {Forty-Third International Conference on Machine Learning},
   year      = {2026},
 }
 ```
